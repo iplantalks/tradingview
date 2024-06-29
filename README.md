@@ -62,3 +62,21 @@ docker run -it --rm -p 3000:3000 ghcr.io/iplantalks/tradingview
 ## Deployment
 
 Docker image is running on the same server as [sync](https://github.com/iplantalks/sync) checkout its [readme](https://github.com/iplantalks/sync?tab=readme-ov-file#production) for details
+
+On server we run it like so:
+
+```bash
+docker pull ghcr.io/iplantalks/tradingview
+docker rm -f tradingview
+docker run -d --name=tradingview --restart=always -e VIRTUAL_PORT=3000 -e VIRTUAL_HOST=tradingview.italks.com.ua --expose=3000 ghcr.io/iplantalks/tradingview
+```
+
+commands are saved on server so you should be able to do
+
+```bash
+ssh talks
+su - docker
+./tradingview.sh
+```
+
+Note: [nginx proxy](https://github.com/nginx-proxy/nginx-proxy/) is used to proxy traffic, that's why your containers should have something like `-e VIRTUAL_PORT=3000 -e VIRTUAL_HOST=tradingview.italks.com.ua --expose=3000` for everything to work, also you gonna need to add corresponding domain to cloudflare
