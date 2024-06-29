@@ -43,3 +43,22 @@ Request examples:
 curl -s 'http://localhost:3000/data?ticker=AAPL&interval=1D&limit=10&ttl=5000' | jq
 curl -s 'http://localhost:3000/data?ticker=ECONOMICS:USGDPQQ&interval=3M&limit=10'
 ```
+
+## Docker
+
+To build image use
+
+```bash
+docker buildx build --platform linux/amd64 -t ghcr.io/iplantalks/tradingview:latest .
+docker push ghcr.io/iplantalks/tradingview
+```
+
+to run it use:
+
+```bash
+docker run -it --rm -p 3000:3000 ghcr.io/iplantalks/tradingview
+```
+
+## Deployment
+
+Docker image is running on the same server as [sync](https://github.com/iplantalks/sync) checkout its [readme](https://github.com/iplantalks/sync?tab=readme-ov-file#production) for details
