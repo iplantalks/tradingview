@@ -1,0 +1,24 @@
+name: docker
+
+on:
+  push:
+    branches: ['main']
+  # pull_request:
+  #   branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - run: docker buildx build --platform linux/amd64 -t ghcr.io/iplantalks/tradingview .
+      - run: docker push ghcr.io/iplantalks/tradingview
