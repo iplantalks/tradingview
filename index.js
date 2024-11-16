@@ -78,6 +78,10 @@ function tradingview(ticker, interval = '1D', limit = '300') {
           socket.close()
           console.log('failed', options)
           reject(JSON.parse(data).p[2])
+        } else if (data.includes('symbol_error')) {
+          socket.close()
+          console.log('failed', options)
+          reject(JSON.parse(data).p[2])
         } else if (data.startsWith('~h~')) {
           // something went wrong, we are in hanging connection that starts to send heartbeats
           socket.close()
@@ -89,9 +93,11 @@ function tradingview(ticker, interval = '1D', limit = '300') {
       if (!connected && event && event.data && event.data.includes('session_id')) {
         const cs = 'cs_' + crypto.randomUUID().replaceAll('-', '').substring(0, 12)
         // console.log(event.data)
-        send('{"m":"set_auth_token","p":["widget_user_token"]}')
+        // send('{"m":"set_auth_token","p":["widget_user_token"]}')
+        send('{"m":"set_auth_token","p":["unauthorized_user_token"]}')
         send('{"m":"chart_create_session","p":["' + cs + '","disable_statistics"]}')
-        send('{"m":"resolve_symbol","p":["' + cs + '","sds_sym_1","' + ticker + '"]}')
+        // send('{"m":"resolve_symbol","p":["' + cs + '","sds_sym_1","' + ticker + '"]}')
+        send('{"m":"resolve_symbol","p":["' + cs + '","sds_sym_1","={\\"symbol\\":\\"' + ticker + '\\"}"]}')
         send('{"m":"create_series","p":["' + cs + '","sds_1","s1","sds_sym_1","' + interval + '",' + limit + ']}') // ,"LASTSESSION"
         connected = true
       }
